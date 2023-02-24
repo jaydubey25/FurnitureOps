@@ -1,0 +1,167 @@
+<!doctype html>
+<html class="no-js" lang="">
+{% load static %}
+<head>
+  <meta charset="utf-8">
+  <title></title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/fontawesome.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Open+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <link rel="stylesheet" href="{% static 'css/normalize.css' %}">
+  <link rel="stylesheet" href="{% static 'css/main.css' %}">
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  
+
+  <meta name="theme-color" content="#fafafa">
+
+</head>
+<body>
+    <div class='MainPage-request-container'>
+        <h2 class='main-page-logo'><img src='{% static "img/logo-light.png" %}'/></h2>
+        <h4 class='user-name'>Welcome <span class="user-name-dark">{{ username }}</span></h4>
+            <div class='main-box main-box-left'>
+            <button class='go-back-button' onclick="history.back()"><i class="fas fa-arrow-circle-left"></i></button>
+            <div class='row'>
+                <div class='col-lg-6 col-md-6 col-12 ngo-details'>
+                    <h2 class='form-request-head'>Details of NGO</h2>
+                    <h4>ID of NGO : <span>{{ ngo_detail.id }}</span></h4>
+                    <h4>Name of NGO : <span>{{ ngo_detail.first_name }} {{ ngo_detail.last_name }}</span></h4>
+                    <h4>Email of NGO : <span>{{ ngo_detail.email }}</span></h4>
+                    <h4>Location of NGO : <span>{{ ngo_city }}</span></h4>
+                </div>
+                <div class='col-lg-6 col-md-6 col-12 form-box-request'>
+{#                    <form method="POST" id="ngoDetailForm">#}
+
+                    <h2 class='form-request-head'>Request Here</h2>
+                    <p id="errordiv3"><span id='successMessage'></span></p>
+                    <input type='text' id='fname' name="firstName" placeholder='First Name' autoComplete='off' required/>
+                    <input type='text' id='lname' name="lastName" placeholder='Last Name' autoComplete='off' required/>
+                    <input type='text' id='locality' name="locality" placeholder='Locality' autoComplete='off' required/>
+                    <input type='number' id='additional' name="contactNumber" placeholder='Contact Number' autoComplete='off' required/>
+                    <input type='text' id='city' name="city" placeholder='City' autoComplete='off' required/>
+                    <input type='number' id='pin' name="pincode" placeholder='Pincode' autoComplete='off' required/>
+                    <input type="hidden" id="ngoId" name="ngoId" value="{{ ngo_detail.id }}" required/>
+                    <button type="submit" name="submit" id="submit-form" class="submit-form">Send Request</button>
+{#                    </form>#}
+                </div>
+            </div>
+            </div>
+        </div>
+        <script>
+
+            $('#submit-form').on('click', function (e){
+                e.preventDefault()
+                document.querySelector('#fname').style.borderColor = "#08122F"
+                    document.querySelector('#lname').style.borderColor = "#08122F"
+                    document.querySelector('#locality').style.borderColor = "#08122F"
+                    document.querySelector('#city').style.borderColor = "#08122F"
+                    document.querySelector('#pin').style.borderColor = "#08122F"
+                    document.querySelector('#additional').style.borderColor = "#08122F"
+                var fname = $("#fname").val();
+                var lname = $("#lname").val();
+                var locality = $("#locality").val();
+                var city = $("#city").val();
+                var pin = $("#pin").val();
+                var additional = $("#additional").val();
+                if(fname === ''){
+                    document.querySelector('#errordiv3').innerHTML = 'First Name is Required'
+                    document.querySelector('#fname').focus()
+                    document.querySelector('#fname').style.borderColor = "#F44336"
+                }
+                else if(lname === ''){
+                    document.querySelector('#errordiv3').innerHTML = 'Last Name is Required'
+                    document.querySelector('#lname').focus()
+                    document.querySelector('#lname').style.borderColor = "#F44336"
+                }
+                else if(locality === ''){
+                    document.querySelector('#errordiv3').innerHTML = 'Locality is Required'
+                    document.querySelector('#locality').focus()
+                    document.querySelector('#locality').style.borderColor = "#F44336"
+                }
+                else if(additional === ''){
+                    document.querySelector('#errordiv3').innerHTML = 'Contact Number is Required'
+                    document.querySelector('#additional').focus()
+                    document.querySelector('#additional').style.borderColor = "#F44336"
+                }
+                else if(city === ''){
+                    document.querySelector('#errordiv3').innerHTML = 'City is Required'
+                    document.querySelector('#city').focus()
+                    document.querySelector('#city').style.borderColor = "#F44336"
+                }
+                else if(pin === '') {
+                    document.querySelector('#errordiv3').innerHTML = 'PinCode is Required'
+                    document.querySelector('#pin').focus()
+                    document.querySelector('#pin').style.borderColor = "#F44336"
+                }
+                else
+                {
+                        $.ajax({
+                        type:"POST",
+                        url: "{% url 'RequestNgo' %}",
+                        data: {
+                            firstName: fname,
+                            lastName: lname,
+                            locality: locality,
+                            contactNumber: additional,
+                            city: city,
+                            pincode: pin,
+                            ngoId: $('#ngoId').val(),
+                            csrfmiddlewaretoken: '{{ csrf_token }}',
+                            dataType: "json"
+
+                        },
+                        success: function (data){
+                            document.querySelector('#errordiv3').style.color = "green"
+                            document.querySelector('#errordiv3').innerHTML = "Message Sent Sucessfully <i class='fas fa-check-circle'></i>"
+                            document.querySelector('#fname').style.borderColor = "#08122F"
+                            document.querySelector('#lname').style.borderColor = "#08122F"
+                            document.querySelector('#locality').style.borderColor = "#08122F"
+                            document.querySelector('#city').style.borderColor = "#08122F"
+                            document.querySelector('#pin').style.borderColor = "#08122F"
+                            document.querySelector('#additional').style.borderColor = "#08122F"
+                            $("#fname").val("");
+                            $("#lname").val("");
+                            $("#locality").val("");
+                            $("#city").val("");
+                            $("#pin").val("");
+                            $("#additional").val("");
+
+                        }
+                    });
+
+                }
+
+            });
+
+            $(document).ready(function() {
+                if(localStorage.getItem('dark-mode') == "ON")
+                {
+                    document.querySelector(".MainPage-request-container").classList.add("dark");
+                    document.querySelector(".main-page-logo img").src = '{% static "img/FurnitureOps1.png" %}'
+                }
+                else
+                {
+                    document.querySelector(".MainPage-request-container").classList.remove("dark");
+                    document.querySelector(".main-page-logo img").src = '{% static "img/FurnitureOps1.png" %}'
+                }
+            });
+
+
+            
+            {#document.querySelector('.go-back-button').addEventListener('click',()=>{#}
+            {#    window.location.href = './MainPeople.html'#}
+                {#console.log("Hello")#}
+            {#})#}
+        </script>
+</body>
+</html>

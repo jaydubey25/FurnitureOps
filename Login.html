@@ -1,0 +1,72 @@
+{% extends "Base.html" %}
+{% load static %}
+
+{% block body %}
+  <canvas id="stars"></canvas>
+  <div class="container login-container">
+    <h1 class="cont-head">Login Here!</h1>
+
+    {% if error %}
+      <div class="alert alert-danger" role="alert">
+        {{ error }}
+      </div>
+    {% endif %}
+    <div class="formBox">
+      <form method="POST" action="{% url 'Login' %}">
+        {% csrf_token %}
+      <p class="text-center" id="errordiv2"></p><br />
+      <div class="inputBox w100" style="margin-top : 40px">
+        <input type="text" name="email" required id='email' autoComplete='off' />
+        <span>Email</span>
+      </div>
+      <div class="inputBox w100">
+        <input type="password" name="password" required id='password' autoComplete='off' />
+        <span>Password</span>
+      </div>
+<!--      <div class="inputBox w100">-->
+<!--        <select value="option" id='option'>-->
+<!--          <option value='personal'>Personal</option>-->
+<!--          <option value='ngo'>NGO</option>-->
+<!--        </select>-->
+<!--      </div>-->
+      <center><button type="submit" class='signin-submit-btn' id="Login-Submit-Handler">Submit</button></center>
+      <p class="change-page-link text-center">Don't have an account ? <a href="{% url 'Register' %}"> Sign up</a>
+      </p>
+      </form>
+    </div>
+  </div>
+{% endblock body %}
+
+
+{% block js %}
+  <script src="{% static 'js/app.js' %}"></script>
+  <script>
+    $('#Login-Submit-Handler').click(function(e){
+      var email = $("#email").val();
+      var pwd = $("#password").val();
+      var option = $("#option").val();
+      const regex = /^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[A-Za-z]+$/;
+      if (email.trim() == '') {
+        $('#errordiv2').html('Please enter your email.').css("color", "#f44336");
+        document.querySelector('#email').style.backgroundImage = "url({% static 'img/close.svg' %})"
+        $('#email').focus();
+        return false;
+      }
+      else if(!regex.test(email)) {
+        $('#errordiv2').html('Invalid Email.').css("color", "#f44336");
+        document.querySelector('#email').style.backgroundImage = "url({% static 'img/close.svg' %})"
+        $('#email').focus();
+        }
+      else if (pwd.trim() == '') {
+        $('#errordiv2').html('Please enter your Password.').css("color", "#f44336");
+        document.querySelector('#password').style.backgroundImage = "url({% static 'img/close.svg' %})"
+        $('#password').focus();
+        return false;
+      }
+    });
+  </script>
+  <script>
+
+  </script>
+
+{% endblock js %}
